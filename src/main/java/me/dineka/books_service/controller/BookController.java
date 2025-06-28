@@ -1,5 +1,6 @@
 package me.dineka.books_service.controller;
 
+import me.dineka.books_service.DTO.BookResponseDTO;
 import me.dineka.books_service.DTO.CreateOrUpdateBookDTO;
 import me.dineka.books_service.model.Book;
 import me.dineka.books_service.service.BookService;
@@ -23,17 +24,17 @@ public class BookController {
     }
 
     @GetMapping
-    public List<Book> getAllBooks() {
+    public List<BookResponseDTO> getAllBooks() {
         return bookService.getAllBooks();
     }
 
     @GetMapping("/{id}")
-    public Book getBook(@PathVariable Long id) {
+    public BookResponseDTO getBook(@PathVariable Long id) {
         return bookService.getBookById(id);
     }
 
     @PutMapping("/{id}")
-    public Book updateBook(@PathVariable Long id, @RequestBody CreateOrUpdateBookDTO updateBookDTO) {
+    public BookResponseDTO updateBook(@PathVariable Long id, @RequestBody CreateOrUpdateBookDTO updateBookDTO) {
         return bookService.updateBook(id, updateBookDTO);
     }
 

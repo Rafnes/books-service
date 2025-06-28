@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.time.Year;
 
 public class Validation {
-    public static final String NAME_REGEX = "^[A-Za-zА-Яа-яЁё -.]+$";
+    public static final String BOOKNAME_REGEX = "^[A-Za-zА-Яа-яЁё0-9 -.]+$";
+    public static final String AUTHORNAME_REGEX = "^[A-Za-zА-Яа-яЁё -.]+$";
     public static final int CURRENT_YEAR = Year.now().getValue();
 
     private static final Logger log = LoggerFactory.getLogger(Validation.class);
@@ -33,14 +34,14 @@ public class Validation {
     }
 
     public static void validateAuthorName(String string) {
-        if (string == null || string.isBlank() || !string.matches(NAME_REGEX)) {
+        if (string == null || string.isBlank() || !string.matches(AUTHORNAME_REGEX)) {
             log.error("Некорректное имя автора");
             throw new InvalidAuthorNameException("Некорректное имя автора");
         }
     }
 
     public static void validateBookString(String string) {
-        if (string == null || string.isBlank() || !string.matches(NAME_REGEX)) {
+        if (string == null || string.isBlank() || !string.matches(BOOKNAME_REGEX)) {
             log.error("Некорректное название или жанр книги");
             throw new InvalidBookStringException("Некорректное название или жанр книги");
         }

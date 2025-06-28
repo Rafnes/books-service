@@ -1,5 +1,6 @@
 package me.dineka.books_service.service;
 
+import me.dineka.books_service.DTO.BookResponseDTO;
 import me.dineka.books_service.DTO.CreateOrUpdateBookDTO;
 import me.dineka.books_service.exception.AuthorNotFoundException;
 import me.dineka.books_service.exception.BookAlreadyExistsException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -50,18 +52,21 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-    public List<Book> getAllBooks() {
-        return new ArrayList<>(bookRepository.findAll());
+    public List<BookResponseDTO> getAllBooks() {
+        return bookRepository.findAll().stream()
+                .map(BookResponseDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
-    public Book getBookById(Long id) {
-        return bookRepository.findById(id).orElseThrow(() -> {
+    public BookResponseDTO getBookById(Long id) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> {
             log.error("Книга с id {} не найдена", id);
             return new BookNotFoundException("Книга с id :" + id + " не найдена");
         });
+        return BookResponseDTO.fromEntity(book);
     }
 
-    public Book updateBook(Long bookId, CreateOrUpdateBookDTO updatedBook) {
+    public BookResponseDTO updateBook(Long bookId, CreateOrUpdateBookDTO updatedBook) {
         Book book = bookRepository.findById(bookId).orElseThrow(() -> {
             log.error("Не удалось обновить книгу с id {}: книга не найдена", bookId);
             return new BookNotFoundException("Книга с id " + bookId + " не найдена");
@@ -88,7 +93,7 @@ public class BookService {
 
         bookRepository.save(book);
         log.info("Обновлена книга: {}", book);
-        return book;
+        return BookResponseDTO.fromEntity(book);
     }
 
     public void deleteBook(Long id) {
