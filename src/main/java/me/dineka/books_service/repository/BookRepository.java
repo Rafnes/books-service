@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
-    boolean existsByTitleAndYearAndAuthorId(String title, int year, Long authorId);
+    boolean existsByTitleIgnoreCaseAndYearAndAuthorId(String title, int year, Long authorId);
 }

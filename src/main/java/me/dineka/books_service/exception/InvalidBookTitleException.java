@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class InvalidBookStringException extends RuntimeException {
-    public InvalidBookStringException(String message) {
+public class InvalidBookTitleException extends RuntimeException {
+    public InvalidBookTitleException(String message) {
         super(message);
     }
 }

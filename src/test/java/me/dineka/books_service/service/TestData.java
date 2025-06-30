@@ -13,9 +13,9 @@ public class TestData {
     public static int PUBLISHING_YEAR_2 = 2000;
     public static int PUBLISHING_YEAR_3 = 1992;
 
-    public static String BOOK_NAME_1 = "Книга";
-    public static String BOOK_NAME_2 = "Книга 2";
-    public static String BOOK_NAME_3 = "33 несчастья";
+    public static String BOOK_TITLE_1 = "Книга";
+    public static String BOOK_TITLE_2 = "Книга 2";
+    public static String BOOK_TITLE_3 = "33 несчастья";
 
     public static String GENRE_1 = "Фэнтези";
     public static String GENRE_2 = "Роман";

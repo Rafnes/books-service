@@ -10,6 +10,13 @@ public class CreateOrUpdateBookDTO {
 
     public CreateOrUpdateBookDTO() {}
 
+    public CreateOrUpdateBookDTO(String title, String genre, Integer year, Long authorId) {
+        this.title = title;
+        this.genre = genre;
+        this.year = year;
+        this.authorId = authorId;
+    }
+
     public String getTitle() {
         return title;
     }

@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +37,7 @@ public class BookService {
         });
         validateBook(bookDTO);
 
-        if (bookRepository.existsByTitleAndYearAndAuthorId(bookDTO.getTitle(), bookDTO.getYear(), bookDTO.getAuthorId())) {
+        if (bookRepository.existsByTitleIgnoreCaseAndYearAndAuthorId(bookDTO.getTitle(), bookDTO.getYear(), bookDTO.getAuthorId())) {
             log.error("Не удалось добавить книгу: книга с таким названием, автором и годом издания уже существует");
             throw new BookAlreadyExistsException("Книга с таким названием, автором и годом издания уже существует");
         }
@@ -81,7 +80,7 @@ public class BookService {
 
         validateBook(updatedBook);
 
-        if (bookRepository.existsByTitleAndYearAndAuthorId(updatedBook.getTitle(), updatedBook.getYear(), updatedBook.getAuthorId())) {
+        if (bookRepository.existsByTitleIgnoreCaseAndYearAndAuthorId(updatedBook.getTitle(), updatedBook.getYear(), updatedBook.getAuthorId())) {
             log.error("Не удалось обновить книгу: книга с таким названием, автором и годом издания уже существует");
             throw new BookAlreadyExistsException("Книга с таким названием, автором и годом издания уже существует");
         }
@@ -107,8 +106,8 @@ public class BookService {
     }
 
     private void validateBook(CreateOrUpdateBookDTO bookDTO) {
-        Validation.validateBookString(bookDTO.getTitle());
-        Validation.validateBookString(bookDTO.getGenre());
+        Validation.validateBookTitle(bookDTO.getTitle());
+        Validation.validateBookGenre(bookDTO.getGenre());
         Validation.validatePublishingYear(bookDTO.getYear());
     }
 }

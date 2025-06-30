@@ -29,7 +29,7 @@ public class AuthorService {
         author.setName(dto.getName());
         author.setBirth_year(dto.getBirth_year());
         authorRepository.save(author);
-        log.info("Добавлен новый автор: {}", author);
+        log.info("Добавлен новый автор: {}", author.getName());
         return author;
     }
 
