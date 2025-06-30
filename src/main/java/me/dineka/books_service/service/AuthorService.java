@@ -1,6 +1,7 @@
 package me.dineka.books_service.service;
 
 import me.dineka.books_service.DTO.CreateAuthorDTO;
+import me.dineka.books_service.exception.AuthorAlreadyExistsException;
 import me.dineka.books_service.exception.AuthorNotFoundException;
 import me.dineka.books_service.model.Author;
 import me.dineka.books_service.repository.AuthorRepository;
@@ -52,6 +53,10 @@ public class AuthorService {
     }
 
     private void validateAuthor(CreateAuthorDTO dto) {
+        if (authorRepository.existsByNameIgnoreCaseAndBirth_year(dto.getName(), dto.getBirth_year())) {
+            log.error("Не удалось добавить автора: автор {} уже существует", dto.getName());
+            throw new AuthorAlreadyExistsException("Не удалось добавить автора: автор " + dto.getName() + " уже существует");
+        }
         Validation.validateAuthorName(dto.getName());
         Validation.validateBirthYear(dto.getBirth_year());
     }

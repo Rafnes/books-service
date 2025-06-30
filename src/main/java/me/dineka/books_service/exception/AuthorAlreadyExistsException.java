@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class BlankParameterException extends RuntimeException {
-    public BlankParameterException(String message) {
+public class AuthorAlreadyExistsException extends RuntimeException {
+    public AuthorAlreadyExistsException(String message) {
         super(message);
     }
 }

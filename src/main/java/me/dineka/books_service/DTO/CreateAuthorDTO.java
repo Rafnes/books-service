@@ -6,6 +6,14 @@ public class CreateAuthorDTO {
     private String name;
     private Integer birth_year;
 
+    public CreateAuthorDTO() {
+    }
+
+    public CreateAuthorDTO(String name, Integer birth_year) {
+        this.name = name;
+        this.birth_year = birth_year;
+    }
+
     public String getName() {
         return name;
     }
