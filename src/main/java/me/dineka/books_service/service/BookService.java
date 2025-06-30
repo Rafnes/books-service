@@ -5,6 +5,7 @@ import me.dineka.books_service.DTO.CreateOrUpdateBookDTO;
 import me.dineka.books_service.exception.AuthorNotFoundException;
 import me.dineka.books_service.exception.BookAlreadyExistsException;
 import me.dineka.books_service.exception.BookNotFoundException;
+import me.dineka.books_service.exception.InvalidBookPublishingYearException;
 import me.dineka.books_service.model.Author;
 import me.dineka.books_service.model.Book;
 import me.dineka.books_service.repository.AuthorRepository;
@@ -35,7 +36,7 @@ public class BookService {
             log.error("Не удалось добавить книгу {}: автора с id {} не существует. Сначала добавьте автора", bookDTO.getTitle(), authorId);
             return new AuthorNotFoundException("Автор с id " + authorId + " не найден");
         });
-        validateBook(bookDTO);
+        validateBook(bookDTO, author);
 
         if (bookRepository.existsByTitleIgnoreCaseAndYearAndAuthorId(bookDTO.getTitle(), bookDTO.getYear(), bookDTO.getAuthorId())) {
             log.error("Не удалось добавить книгу: книга с таким названием, автором и годом издания уже существует");
@@ -78,7 +79,7 @@ public class BookService {
             return new AuthorNotFoundException("Автор с id " + authorId + " не найден");
         });
 
-        validateBook(updatedBook);
+        validateBook(updatedBook, author);
 
         if (bookRepository.existsByTitleIgnoreCaseAndYearAndAuthorId(updatedBook.getTitle(), updatedBook.getYear(), updatedBook.getAuthorId())) {
             log.error("Не удалось обновить книгу: книга с таким названием, автором и годом издания уже существует");
@@ -105,9 +106,14 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    private void validateBook(CreateOrUpdateBookDTO bookDTO) {
+    private void validateBook(CreateOrUpdateBookDTO bookDTO, Author author) {
         Validation.validateBookTitle(bookDTO.getTitle());
         Validation.validateBookGenre(bookDTO.getGenre());
         Validation.validatePublishingYear(bookDTO.getYear());
+
+        if (author.getBirth_year()!= null && bookDTO.getYear() < author.getBirth_year()) {
+            log.error("Год издания книги не может быть раньше года рождения автора");
+            throw new InvalidBookPublishingYearException("Год издания книги не может быть раньше года рождения автора");
+        }
     }
 }
