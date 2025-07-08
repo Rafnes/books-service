@@ -23,6 +23,10 @@ public class AuthorService {
         this.authorRepository = authorRepository;
     }
 
+
+    /*
+
+     */
     public Author addAuthor(CreateAuthorDTO dto) {
         validateAuthor(dto);
         Author author = new Author();
@@ -53,7 +57,7 @@ public class AuthorService {
     }
 
     private void validateAuthor(CreateAuthorDTO dto) {
-        if (authorRepository.existsByNameIgnoreCaseAndBirth_year(dto.getName(), dto.getBirth_year())) {
+        if (authorRepository.existsByNameIgnoreCaseAndBirthYear(dto.getName(), dto.getBirth_year())) {
             log.error("Не удалось добавить автора: автор {} уже существует", dto.getName());
             throw new AuthorAlreadyExistsException("Не удалось добавить автора: автор " + dto.getName() + " уже существует");
         }

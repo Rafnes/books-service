@@ -93,7 +93,7 @@ class AuthorServiceTest {
     void testAddAuthor_Negative_6() {
         CreateAuthorDTO dto = new CreateAuthorDTO(AUTHOR_NAME_1, BIRTH_YEAR_1);
 
-        when(authorRepository.existsByNameIgnoreCaseAndBirth_year(dto.getName(), dto.getBirth_year())).thenReturn(true);
+        when(authorRepository.existsByNameIgnoreCaseAndBirthYear(dto.getName(), dto.getBirth_year())).thenReturn(true);
 
         //test & check
         assertThrows(AuthorAlreadyExistsException.class, () -> authorService.addAuthor(dto));
