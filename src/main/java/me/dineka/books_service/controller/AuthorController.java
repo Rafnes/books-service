@@ -33,7 +33,7 @@ public class AuthorController {
         return authorService.getAllAuthors(PageRequest.of(page, size));
     }
 
-    @Operation(summary = "Получить автора по id", description = "Получение автора по id")
+    @Operation(summary = "Получить автора", description = "Получение информации об авторе")
     @GetMapping("/{id}")
     public Author getAuthor(@PathVariable Long id) {
         return authorService.getAuthorById(id);
