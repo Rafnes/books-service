@@ -30,6 +30,17 @@ public class BookService {
         this.authorRepository = authorRepository;
     }
 
+    /**
+     * Добавляет новую книгу.
+     *
+     * <p>Проверяет, существует ли автор с переданным {@code id}, валидирует данные книги
+     * Если все проверки проходят, добавляет книгу в репозиторий</p>
+     *
+     * @param bookDTO объект {@link CreateOrUpdateBookDTO}, содержащий название книги, жанр, год издания и id автора
+     * @return сохраненный объект {@link Book}
+     * @throws AuthorNotFoundException если автор с указанным id не найден
+     * @throws BookAlreadyExistsException если книга с таким названием, годом издания и автором уже существует
+     */
     public Book addBook(CreateOrUpdateBookDTO bookDTO) {
         Long authorId = bookDTO.getAuthorId();
         Author author = authorRepository.findById(authorId).orElseThrow(() -> {
@@ -52,12 +63,28 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    /**
+     * Получает список всех книг.
+     *
+     * <p> Каждая книга преобразуется в {@link BookResponseDTO} для передачи клиенту
+     * </p>
+     * @return список объектов {@link BookResponseDTO}, представляющих все добавленные книги
+     */
     public List<BookResponseDTO> getAllBooks() {
         return bookRepository.findAll().stream()
                 .map(BookResponseDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Получает книгу по {@code id}.
+     *
+     * <p>Если книга с указанным id не найдена, выбрасывается исключение {@link BookNotFoundException}.</p>
+     *
+     * @param id искомой книги
+     * @return объект {@link BookResponseDTO}, представляющий найденную книгу
+     * @throws BookNotFoundException если книга с указанным {@code id} не существует
+     */
     public BookResponseDTO getBookById(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> {
             log.error("Книга с id {} не найдена", id);
@@ -66,6 +93,21 @@ public class BookService {
         return BookResponseDTO.fromEntity(book);
     }
 
+    /**
+     * Обновляет книгу по {@code bookId}.
+     *
+     * <p>Метод проверяет, существует ли книга по переданному {@code bookId}, существует ли автор по переданному id
+     * из объекта {@code CreateOrUpdateBookDTO}, валидирует данные книги. Проверяет, не существует ли уже книга с переданными
+     * названием, жанром, годом издания и автором, и если книги с такими параметрами нет, обновляет поля книги и сохраняет
+     * ее в репозитории.
+     * </p>
+     * @param bookId идентификатор книги для обновления
+     * @param updatedBook объект {@link CreateOrUpdateBookDTO}, содержащий новые данные книги
+     * @return объект {@link BookResponseDTO} с обновлёнными данными книги
+     * @throws BookNotFoundException если книга с указанным {@code bookId} не найдена
+     * @throws AuthorNotFoundException если автор с id из {@code updatedBook} не найден
+     * @throws BookAlreadyExistsException если существует другая книга с таким же названием, годом издания и автором
+     */
     public BookResponseDTO updateBook(Long bookId, CreateOrUpdateBookDTO updatedBook) {
         Book book = bookRepository.findById(bookId).orElseThrow(() -> {
             log.error("Не удалось обновить книгу с id {}: книга не найдена", bookId);
@@ -96,6 +138,14 @@ public class BookService {
         return BookResponseDTO.fromEntity(book);
     }
 
+    /**
+     * Удаляет книгу по {@code id}.
+     *
+     * <p>Если книга с указанным {@code id} не найдена, выбрасывается исключение {@link BookNotFoundException}.</p>
+     *
+     * @param id идентификатор книги для удаления
+     * @throws BookNotFoundException если книга с указанным {@code id} не существует
+     */
     public void deleteBook(Long id) {
         log.info("Удаляем книгу с id {}", id);
         if (!bookRepository.existsById(id)) {
@@ -106,6 +156,19 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
+    /**
+     * Валидирует данные книги и проверяет корректность года издания относительно года рождения автора.
+     *
+     * <p>Вызывает методы проверки названия книги, жанра и года издания из класса {@code Validation}
+     * Далее метод проверяет, что год издания книги не раньше года рождения автора
+     * </p>
+     *
+     * @param bookDTO объект {@link CreateOrUpdateBookDTO}, содержащий данные книги для валидации
+     * @param author объект {@link Author}, связанный с книгой
+     * @throws me.dineka.books_service.exception.InvalidBookTitleException если название книги некорректно
+     * @throws me.dineka.books_service.exception.InvalidBookGenreException если жанр книги некорректен
+     * @throws InvalidBookPublishingYearException если год издания некорректен или раньше года рождения автора
+     */
     private void validateBook(CreateOrUpdateBookDTO bookDTO, Author author) {
         Validation.validateBookTitle(bookDTO.getTitle());
         Validation.validateBookGenre(bookDTO.getGenre());

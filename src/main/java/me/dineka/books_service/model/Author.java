@@ -15,7 +15,7 @@ public class Author {
 
     private String name;
 
-    private Integer birth_year;
+    private Integer birthYear;
 
     public Author() {
     }
@@ -37,23 +37,23 @@ public class Author {
     }
 
     public Integer getBirth_year() {
-        return birth_year;
+        return birthYear;
     }
 
     public void setBirth_year(Integer birth_year) {
-        this.birth_year = birth_year;
+        this.birthYear = birth_year;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Author author = (Author) o;
-        return Objects.equals(id, author.id) && Objects.equals(name, author.name) && Objects.equals(birth_year, author.birth_year);
+        return Objects.equals(id, author.id) && Objects.equals(name, author.name) && Objects.equals(birthYear, author.birthYear);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, birth_year);
+        return Objects.hash(id, name, birthYear);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class Author {
         return "Author{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", birth_year=" + birth_year +
+                ", birth_year=" + birthYear +
                 '}';
     }
 }
