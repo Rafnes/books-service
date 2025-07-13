@@ -23,7 +23,7 @@ public class BookController {
 
     @Operation(summary = "Добавить книгу", description = "Добавление новой книги")
     @PostMapping
-    public Book addBook(CreateOrUpdateBookDTO bookDTO) {
+    public Book addBook(@RequestBody CreateOrUpdateBookDTO bookDTO) {
         return bookService.addBook(bookDTO);
     }
 
