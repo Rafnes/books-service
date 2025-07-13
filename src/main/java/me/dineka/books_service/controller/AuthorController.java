@@ -22,7 +22,7 @@ public class AuthorController {
 
     @Operation(summary = "Добавить автора", description = "Добавление нового автора")
     @PostMapping
-    public Author addAuthor(CreateAuthorDTO dto) {
+    public Author addAuthor(@RequestBody CreateAuthorDTO dto) {
         return authorService.addAuthor(dto);
     }
 
