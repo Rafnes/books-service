@@ -162,10 +162,16 @@ class AuthorServiceTest {
         assertThrows(IllegalArgumentException.class, () -> authorService.getAllAuthors(PageRequest.of(-5, 5)));
     }
 
+
     @Test
-    @DisplayName("Выбрасывает исключение если значение size меньше или равно 0")
+    @DisplayName("Выбрасывает исключение если значение size меньше 0")
     void testGetAllAuthorsNegative_2() {
-        assertThrows(IllegalArgumentException.class, () -> authorService.getAllAuthors(PageRequest.of(5, 0)));
         assertThrows(IllegalArgumentException.class, () -> authorService.getAllAuthors(PageRequest.of(5, -5)));
+    }
+
+    @Test
+    @DisplayName("Выбрасывает исключение если значение size равно 0")
+    void testGetAllAuthorsNegative_3() {
+        assertThrows(IllegalArgumentException.class, () -> authorService.getAllAuthors(PageRequest.of(5, 0)));
     }
 }

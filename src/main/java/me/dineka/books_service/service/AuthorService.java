@@ -24,19 +24,28 @@ public class AuthorService {
     }
 
 
-    /*
-
+    /**
+     * Добавляет нового автора
+     * @param authorDTO {@link CreateAuthorDTO} для создания автора с полями name и birth_year
+     * @return {@link Author}
      */
-    public Author addAuthor(CreateAuthorDTO dto) {
-        validateAuthor(dto);
+    public Author addAuthor(CreateAuthorDTO authorDTO) {
+        validateAuthor(authorDTO);
         Author author = new Author();
-        author.setName(dto.getName());
-        author.setBirth_year(dto.getBirth_year());
+        author.setName(authorDTO.getName());
+        author.setBirth_year(authorDTO.getBirth_year());
         authorRepository.save(author);
         log.info("Добавлен новый автор: {}", author.getName());
         return author;
     }
 
+    /**
+     * Получает автора по {@code id}
+     * @param id id искомого автора
+     *
+     * @throws AuthorNotFoundException если автор не найден
+     * @return {@link Author}
+     */
     public Author getAuthorById(Long id) {
         return authorRepository.findById(id).orElseThrow(() -> {
             log.warn("Не удалось найти автора с id: {}", id);
@@ -44,6 +53,13 @@ public class AuthorService {
         });
     }
 
+    /**
+     * Возвращает список авторов с учётом параметров пагинации.
+     *
+     * @param request объект {@link Pageable}, содержащий параметры страницы и размера страницы
+     * @return список {@link Author} из указанной страницы
+     * @throws IllegalArgumentException если номер страницы меньше 0 или размер страницы меньше или равен 0
+     */
     public List<Author> getAllAuthors(Pageable request) {
         if (request.getPageNumber() < 0) {
             log.warn("Не удалось получить список авторов: некорректное значение page: {}", request.getPageNumber());
@@ -56,13 +72,22 @@ public class AuthorService {
         return authorRepository.findAll(request).getContent();
     }
 
-    private void validateAuthor(CreateAuthorDTO dto) {
-        if (authorRepository.existsByNameIgnoreCaseAndBirthYear(dto.getName(), dto.getBirth_year())) {
-            log.error("Не удалось добавить автора: автор {} уже существует", dto.getName());
-            throw new AuthorAlreadyExistsException("Не удалось добавить автора: автор " + dto.getName() + " уже существует");
+    /**
+     * Валидирует данные автора перед добавлением в базу.
+     * Проверяет, существует ли уже автор с таким именем и годом рождения,
+     * а также корректность имени и года рождения.
+     *
+     * @param authorDTO объект {@link CreateAuthorDTO} с данными автора для валидации
+     * @throws AuthorAlreadyExistsException если автор с таким именем и годом рождения уже существует
+     * @throws IllegalArgumentException если имя автора или год рождения не проходят валидацию
+     */
+    private void validateAuthor(CreateAuthorDTO authorDTO) {
+        if (authorRepository.existsByNameIgnoreCaseAndBirthYear(authorDTO.getName(), authorDTO.getBirth_year())) {
+            log.error("Не удалось добавить автора: автор {} уже существует", authorDTO.getName());
+            throw new AuthorAlreadyExistsException("Не удалось добавить автора: автор " + authorDTO.getName() + " уже существует");
         }
-        Validation.validateAuthorName(dto.getName());
-        Validation.validateBirthYear(dto.getBirth_year());
+        Validation.validateAuthorName(authorDTO.getName());
+        Validation.validateBirthYear(authorDTO.getBirth_year());
     }
 
 }
